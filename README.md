@@ -5,6 +5,7 @@ The script detects collisions in the game world, and applies damage depending on
 
 Features:
 <li>Damage to driver & passengers when two ped vehicles collide
-<li>Damage to driver & passengers when ped vehicles collide with anything/fall from height/roll over.
+<li>Damage to driver & passengers when ped vehicles collide with anything/fall from height/roll over
 <li>Damage to player & passengers when colliding with anything/falling from height/rolling over
 <li>Damage depends on force of impact
+<li>Force of impact is calculated using the speed difference between the moment of impact and after the impact
