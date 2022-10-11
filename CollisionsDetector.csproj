@@ -7,8 +7,8 @@
     <ProjectGuid>{43AD8D4B-FD77-439A-8F10-D19DCA227293}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeadlyCrashes</RootNamespace>
-    <AssemblyName>DeadlyCrashes</AssemblyName>
+    <RootNamespace>CollisionsDetector</RootNamespace>
+    <AssemblyName>CollisionsDetector</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

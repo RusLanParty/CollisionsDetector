@@ -15,39 +15,33 @@ namespace First
 {
     public class Main : Script
     {
-        bool showDebug = false;
-        public int count;
-        public float speed;
-        public float afterSpeed;
-        public float speedDif = 0;
-        public float dmg;
-        public int health;
-        public int time;
-        public int nowTime;
-        public int res;
-        public int time1;
-        public int nowTime1;
-        public int res1;
-        public float dmgp;
-        public float pedSpeed;
-        public float pedAfterSpeed;
-        public float pedSpeedDif;
-        public bool update1;
-        public bool update;
-        public float dmgPed;
-        public int i;
+        float speed;
+        float afterSpeed;
+        float speedDif = 0;
+        float dmg;
+        int time;
+        int nowTime;
+        int res;
+        float pedSpeed;
+        float pedAfterSpeed;
+        float pedSpeedDif;
+        bool update;
+        float dmgPed;
+        float pedMultiplier;
+        float playerMultiplier;
+
 
 
         public Main()
         {
+            playerMultiplier = Settings.GetValue("SETTINGS", "playerDmgMult", 2.0f);
+            pedMultiplier = Settings.GetValue("SETTINGS", "pedDmgMult", 1.0f);
             update = true;
-            update1 = true;
-            res1 = 0;
             res = 0;
             Tick += onTick;
-            KeyDown += onKeyDown;
 
         }
+        
 
         public void PedDam()
         {
@@ -71,7 +65,7 @@ namespace First
                          Wait(1);
                         pedAfterSpeed = pedv.Speed;
                         pedSpeedDif = pedSpeed - pedAfterSpeed;
-                        dmgPed = pedSpeedDif * 0.5f;
+                        dmgPed = pedSpeedDif * pedMultiplier;
                         if (dmgPed <= 0)
                         {
                             dmgPed = dmgPed * -1;
@@ -80,9 +74,7 @@ namespace First
 
                     if (dmgPed > 0)
                     {
-                        if (dmgPed <= 30) { dmgPed = dmgPed * 5; }
-                        if (dmgPed > 30) { dmgPed = dmgPed * 3; }
-                        
+                       
 
                         if (pedv.Exists())
                         {
@@ -92,7 +84,7 @@ namespace First
                             if (dr != null)
                             {
                                 dr.ApplyDamage((int)dmgPed);
-                                if (showDebug) { GTA.UI.Screen.ShowHelpText("There was a collision! ~r~Damage: ~y~" + dmgPed, 3000, true, false); }
+                                //GTA.UI.Screen.ShowHelpText("Damage: " + dmgPed + "Mult: " + pedMultiplier, 3000, true, false);
                             }
                             if (pedv.PassengerCount > 0)
                             {
@@ -144,25 +136,16 @@ namespace First
                 }
                 if (speedDif > 0)
                 {
-                    dmg = speedDif * 0.8f;
+                    dmg = speedDif * playerMultiplier;
                     playerPed.ApplyDamage((int)dmg);
+                    //GTA.UI.Screen.ShowSubtitle("Damage: " + dmg + "Mult:" + playerMultiplier, 3000);
                     speedDif = 0;
                 }
             }
                 
             }
 
-            private void onKeyDown(object sender, KeyEventArgs e)
-            {
-                if (e.KeyCode == Keys.NumPad9)
-                {
-                    showDebug = !showDebug;
-                GTA.UI.Screen.ShowSubtitle("Debug: " + showDebug, 1000);
-                }
-
-
-
-            }
+           
         }
     }
 

@@ -1,0 +1,9 @@
+D:\Visual Studio\Repos\RealCrash\bin\Debug\CollisionDetector.dll
+D:\Visual Studio\Repos\RealCrash\bin\Debug\CollisionDetector.pdb
+D:\Visual Studio\Repos\RealCrash\bin\Debug\ScriptHookVDotNet3.dll
+D:\Visual Studio\Repos\RealCrash\bin\Debug\ScriptHookVDotNet3.xml
+D:\Visual Studio\Repos\RealCrash\obj\Debug\CollisionDetector.csproj.AssemblyReference.cache
+D:\Visual Studio\Repos\RealCrash\obj\Debug\CollisionDetector.csproj.CoreCompileInputs.cache
+D:\Visual Studio\Repos\RealCrash\obj\Debug\CollisionDetector.csproj.CopyComplete
+D:\Visual Studio\Repos\RealCrash\obj\Debug\CollisionDetector.dll
+D:\Visual Studio\Repos\RealCrash\obj\Debug\CollisionDetector.pdb
