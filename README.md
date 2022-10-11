@@ -1,7 +1,7 @@
 # CollisionsDetector
 This is a .NET script for GTA V
 
-The script detects collisions in the world, and applies damage depending on impact force to all vehicle occupants.
+The script detects collisions in the game world, and applies damage depending on impact force to all vehicle occupants.
 
 Features:
 <li>Damage to driver & passengers when two ped vehicles collide
