@@ -29,11 +29,13 @@ namespace First
         float dmgPed;
         float pedMultiplier;
         float playerMultiplier;
-
-
+        bool playerEnabled;
+        bool pedsEnabled;
 
         public Main()
         {
+            playerEnabled = Settings.GetValue("SETTINGS", "playerEnabled", true);
+            pedsEnabled = Settings.GetValue("SETTINGS", "pedsEnabled", true);
             playerMultiplier = Settings.GetValue("SETTINGS", "playerDmgMult", 2.0f);
             pedMultiplier = Settings.GetValue("SETTINGS", "pedDmgMult", 1.0f);
             update = true;
@@ -42,7 +44,6 @@ namespace First
 
         }
         
-
         public void PedDam()
         {
             List<Ped> pedes = new List<Ped>(World.GetNearbyPeds(Game.Player.Character, 1000f));
@@ -109,12 +110,12 @@ namespace First
 
             public void onTick(object sender, EventArgs e)
             {
-                PedDam();
-            
+            if (pedsEnabled) { PedDam(); }
+                
             Ped playerPed = Game.Player.Character;
-                Vehicle car = playerPed.CurrentVehicle;
+            Vehicle car = playerPed.CurrentVehicle;
 
-            if (playerPed.IsInVehicle() && (update))
+            if (playerPed.IsInVehicle() && update && playerEnabled)
             {
                 speed = car.Speed;
                 time = Game.GameTime;
@@ -144,8 +145,6 @@ namespace First
             }
                 
             }
-
-           
         }
     }
 
