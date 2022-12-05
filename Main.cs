@@ -44,26 +44,17 @@ namespace First
 
         }
         
-        public void PedDam()
+        public void pedDamage()
         {
-            List<Ped> pedes = new List<Ped>(World.GetNearbyPeds(Game.Player.Character, 1000f));
-            List<Vehicle> pedVehs = new List<Vehicle>();
+            Ped player = Game.Player.Character;
+            List<Vehicle> pedVehs = new List<Vehicle>(World.GetNearbyVehicles(player, 25.0f));
 
-            foreach (Ped pedik in pedes)
-            {
-                if (pedik.IsInVehicle())
-                {
-                    Vehicle pedikVeh = pedik.CurrentVehicle;
-                    pedVehs.Add(pedikVeh);
-                }
-            }
-           
                 foreach (Vehicle pedv in pedVehs)
                 {
                 if (pedv.HasCollided)
                 {
                         pedSpeed = pedv.Speed;
-                         Wait(1);
+                        Wait(5);
                         pedAfterSpeed = pedv.Speed;
                         pedSpeedDif = pedSpeed - pedAfterSpeed;
                         dmgPed = pedSpeedDif * pedMultiplier;
@@ -71,15 +62,10 @@ namespace First
                         {
                             dmgPed = dmgPed * -1;
                         }
-
-
                     if (dmgPed > 0)
                     {
-                       
-
                         if (pedv.Exists())
                         {
-
                             Ped dr = pedv.Driver;
 
                             if (dr != null)
@@ -101,34 +87,29 @@ namespace First
                         }
                     }
                     else { dmgPed = 0; }
-
                 }
                 dmgPed = 0;
-
             }
                     }
-
-            public void onTick(object sender, EventArgs e)
-            {
-            if (pedsEnabled) { PedDam(); }
-                
+        public void playerDamage()
+        {
             Ped playerPed = Game.Player.Character;
             Vehicle car = playerPed.CurrentVehicle;
 
-            if (playerPed.IsInVehicle() && update && playerEnabled)
+            if (playerPed.IsInVehicle() && update)
             {
                 speed = car.Speed;
                 time = Game.GameTime;
                 update = false;
             }
-                if (playerPed.IsInVehicle())
+            if (playerPed.IsInVehicle())
             {
                 nowTime = Game.GameTime;
                 res = nowTime - time;
                 if (res > 2)
                 {
                     update = true;
-                    
+
                 }
                 if (car.HasCollided)
                 {
@@ -143,8 +124,15 @@ namespace First
                     speedDif = 0;
                 }
             }
-                
-            }
+
+        }
+
+        public void onTick(object sender, EventArgs e)
+        {
+            if (pedsEnabled) { pedDamage(); }
+            if (playerEnabled) { playerDamage(); }
+   
+        }
         }
     }
 
