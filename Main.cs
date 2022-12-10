@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,22 +23,20 @@ namespace First
         int time;
         int nowTime;
         int res;
-        float pedSpeed;
-        float pedAfterSpeed;
-        float pedSpeedDif;
         bool update;
-        float dmgPed;
         float pedMultiplier;
         float playerMultiplier;
         bool playerEnabled;
         bool pedsEnabled;
+        float range;
 
         public Main()
         {
             playerEnabled = Settings.GetValue("SETTINGS", "playerEnabled", true);
             pedsEnabled = Settings.GetValue("SETTINGS", "pedsEnabled", true);
-            playerMultiplier = Settings.GetValue("SETTINGS", "playerDmgMult", 2.0f);
+            playerMultiplier = Settings.GetValue("SETTINGS", "playerDmgMult", 1.0f);
             pedMultiplier = Settings.GetValue("SETTINGS", "pedDmgMult", 1.0f);
+            range = Settings.GetValue("SETTINGS", "range", 50.0f);
             update = true;
             res = 0;
             Tick += onTick;
@@ -47,48 +46,38 @@ namespace First
         public void pedDamage()
         {
             Ped player = Game.Player.Character;
-            List<Vehicle> pedVehs = new List<Vehicle>(World.GetNearbyVehicles(player, 25.0f));
+            var pedVehs = World.GetNearbyVehicles(player, range).Where(v => v.HasCollided).Select(v => new { Vehicle = v, initSpd = v.Speed }).ToList();
+            Wait(0);
+            foreach(var pedv in pedVehs.Where(v => v.Vehicle.Exists()))
+            {
+                var pedSpeedDif = pedv.initSpd - pedv.Vehicle.Speed;
+                var dmgPed = (int)Math.Abs(pedSpeedDif * pedMultiplier * 5);
+                if (dmgPed >= 0)
+                {
+                        Ped dr = pedv.Vehicle.Driver;
 
-                foreach (Vehicle pedv in pedVehs)
-                {
-                if (pedv.HasCollided)
-                {
-                        pedSpeed = pedv.Speed;
-                        Wait(5);
-                        pedAfterSpeed = pedv.Speed;
-                        pedSpeedDif = pedSpeed - pedAfterSpeed;
-                        dmgPed = pedSpeedDif * pedMultiplier;
-                        if (dmgPed <= 0)
+                        if (dr != null)
                         {
-                            dmgPed = dmgPed * -1;
+                            dr.ApplyDamage(dmgPed);
+                            //GTA.UI.Screen.ShowHelpText("Damage: " + dmgPed + " Range: " + range + " initSpd=" + pedv.initSpd, 3000, true, false);
                         }
-                    if (dmgPed > 0)
-                    {
-                        if (pedv.Exists())
+                        if (pedv.Vehicle.PassengerCount > 0)
                         {
-                            Ped dr = pedv.Driver;
-
-                            if (dr != null)
+                            List<Ped> pedPsngrs = new List<Ped>(pedv.Vehicle.Passengers);
+                            foreach (Ped pp in pedPsngrs)
                             {
-                                dr.ApplyDamage((int)dmgPed);
-                                //GTA.UI.Screen.ShowHelpText("Damage: " + dmgPed + "Mult: " + pedMultiplier, 3000, true, false);
-                            }
-                            if (pedv.PassengerCount > 0)
-                            {
-                                List<Ped> pedPsngrs = new List<Ped>(pedv.Passengers);
-                                foreach (Ped pp in pedPsngrs)
+                                if (pp != null)
                                 {
-                                    if (pp != null)
-                                    {
-                                        pp.ApplyDamage((int)dmgPed);
-                                    }
+                                    pp.ApplyDamage((int)dmgPed);
                                 }
                             }
                         }
-                    }
-                    else { dmgPed = 0; }
                 }
+
+               else { dmgPed = 0; }
+                
                 dmgPed = 0;
+
             }
                     }
         public void playerDamage()
