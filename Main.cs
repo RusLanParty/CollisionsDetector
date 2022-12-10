@@ -46,20 +46,22 @@ namespace First
         public void pedDamage()
         {
             Ped player = Game.Player.Character;
-            var pedVehs = World.GetNearbyVehicles(player, range).Where(v => v.HasCollided).Select(v => new { Vehicle = v, initSpd = v.Speed }).ToList();
-            Wait(0);
-            foreach(var pedv in pedVehs.Where(v => v.Vehicle.Exists()))
-            {
-                var pedSpeedDif = pedv.initSpd - pedv.Vehicle.Speed;
-                var dmgPed = (int)Math.Abs(pedSpeedDif * pedMultiplier * 5);
-                if (dmgPed >= 0)
+            var pedVehs = World.GetNearbyVehicles(player, range).Select(v => new { Vehicle = v, initSpd = v.Speed }).ToList();
+
+            Wait(5);
+                foreach (var pedv in pedVehs.Where(v => v.Vehicle.Exists()))
                 {
+                if (!pedv.Vehicle.IsMotorcycle && pedv.Vehicle.HasCollided)
+                {
+                    var pedSpeedDif = pedv.initSpd - pedv.Vehicle.Speed;
+                    var dmgPed = (int)Math.Abs(pedSpeedDif * pedMultiplier * 5);
+                    if (dmgPed >= 1)
+                    {
                         Ped dr = pedv.Vehicle.Driver;
 
                         if (dr != null)
                         {
                             dr.ApplyDamage(dmgPed);
-                            //GTA.UI.Screen.ShowHelpText("Damage: " + dmgPed + " Range: " + range + " initSpd=" + pedv.initSpd, 3000, true, false);
                         }
                         if (pedv.Vehicle.PassengerCount > 0)
                         {
@@ -72,14 +74,16 @@ namespace First
                                 }
                             }
                         }
-                }
-
-               else { dmgPed = 0; }
-                
-                dmgPed = 0;
-
-            }
                     }
+
+                    else { dmgPed = 0; }
+
+                    dmgPed = 0;
+                }
+            }
+            }
+            
+                    
         public void playerDamage()
         {
             Ped playerPed = Game.Player.Character;
