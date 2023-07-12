@@ -47,21 +47,20 @@ namespace First
         {
             Ped player = Game.Player.Character;
             var pedVehs = World.GetNearbyVehicles(player, range).Select(v => new { Vehicle = v, initSpd = v.Speed }).ToList();
-
             Wait(5);
                 foreach (var pedv in pedVehs.Where(v => v.Vehicle.Exists()))
                 {
                 if (!pedv.Vehicle.IsMotorcycle && pedv.Vehicle.HasCollided)
                 {
                     var pedSpeedDif = pedv.initSpd - pedv.Vehicle.Speed;
-                    var dmgPed = (int)Math.Abs(pedSpeedDif * pedMultiplier * 5);
+                    var dmgPed = (int)Math.Abs(pedSpeedDif * pedMultiplier * 4);
                     if (dmgPed >= 1)
                     {
                         Ped dr = pedv.Vehicle.Driver;
 
                         if (dr != null)
                         {
-                            dr.ApplyDamage(dmgPed);
+                            dr.HealthFloat += -1* (dmgPed * Function.Call<float>(Hash.GET_RANDOM_FLOAT_IN_RANGE, 0.7, 1.1));
                         }
                         if (pedv.Vehicle.PassengerCount > 0)
                         {
@@ -70,20 +69,16 @@ namespace First
                             {
                                 if (pp != null)
                                 {
-                                    pp.ApplyDamage((int)dmgPed);
+                                    pp.HealthFloat += -1 * ((dmgPed * Function.Call<float>(Hash.GET_RANDOM_FLOAT_IN_RANGE, 0.7, 1.1)));
                                 }
                             }
                         }
                     }
-
                     else { dmgPed = 0; }
-
                     dmgPed = 0;
                 }
             }
-            }
-            
-                    
+            }       
         public void playerDamage()
         {
             Ped playerPed = Game.Player.Character;
